@@ -1,0 +1,161 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#logo{
+    border: solid red;
+    background: rgb(17, 17, 77);
+    border-radius: 9px;
+    padding: 3px;
+    position: absolute;
+    top: 12px;
+    left:5px;
+    z-index: 1;
+    color: seashell;
+}
+#logo-tag{
+    border: solid red;
+    background: rgb(17, 17, 77);
+    border-radius: 9px;
+    padding: 3px;
+    color: seashell;
+}
+
+ body{
+       background-image: url('https://ei.marketwatch.com/Multimedia/2018/09/10/Photos/ZG/MW-GP796_airpor_20180910135414_ZG.jpg?uuid=87c4eaac-b522-11e8-a0c1-ac162d7bc1f7');
+
+    /* background-repeat: no-repeat; */
+    background-size: cover
+    
+} 
+.container{
+    /* border : solid green; */
+    width: 400px;
+    height: 78%;
+    padding: 25px 2px;
+    background-color: rgb(192, 192, 243);
+    /* background:transparent; */
+    opacity: 0.76;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+top: 70px;
+left: 8px;
+    
+}
+
+
+#myform{
+    display: flex;
+    /* border : solid black; */
+    padding: 10px 2px;
+    justify-content: center;
+background: transparent;
+align-items: center;
+    flex-direction: column;
+    width: 300px;
+    height: 400px;
+
+  
+}
+
+
+#pickup, #drop, #cabtype{
+    margin: 9px 0px;
+    background-color: whitesmoke;
+        width: 150px;
+}
+#luggage{
+    margin: 9px 0px;
+    background-color: whitesmoke;
+    width: 150px;
+}
+#navbar{
+    position: relative;
+    display: flex;
+    flex-flow: row-reverse;
+    background-color: rgb(139, 142, 225);
+    /* justify-content: center; */
+    margin: auto;
+    padding: 10px 12px;
+}
+.navbar-brand{
+    color:whitesmoke;
+}
+.btn{
+    background-color: rgb(155, 155, 238);
+    color: white;
+    border: solid violet;
+    width: 90px;
+    padding: 1px 4px;
+}
+
+.label{
+    width: 90px;
+    padding: 1px 4px;
+    background-color: wheat;
+}
+/* //////////////////////////////////////////////////////// */
+/* login -page csss */
+#login-form div > input{
+    width: 200px;
+}
+#signup-form div > input{
+    width: 250px;
+}
+
+#login-form, #signup-form{
+  /* border: solid red; */
+  display: flex;
+  height: inherit;
+  flex-direction: column;
+  width: 100%;
+ padding: 10px 5px;
+ margin: 5px;
+
+}
+#login-form > div{
+    margin: 5px 0px;
+}
+
+/* Sign Up -page csss */
+
+#signup-form > div{
+    margin: 5px 0px;
+    width: 100%;
+}
+#signup-btn{
+    display: none;
+}
+
+/* email otp input hide and show */
+#email-otp{
+    display: none;
+}
+#email-otp-btn{
+    background-color: rgb(12, 172, 92);
+    display: none;
+
+}
+
+
+
+
+
+
+
+
+
+footer{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 8px;
+    font-size: 19px;
+    color: whitesmoke;
+    background-color: rgb(139, 142, 225);
+
+    
+}
