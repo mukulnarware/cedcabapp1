@@ -46,6 +46,19 @@ case 'get_details' :////////////////////////
     }else{
         echo(-1);
     }
+    
+    
+
+    break;
+    case 'pen_rides_adm' ://///////////////////////
+        if(isset($_POST['action']) && $_POST['action']=='pen_rides_adm'){
+   
+            $data=$tbl_ride_obj->pen_rides_adm();
+            print_r(json_encode($data));
+        
+            }else{
+                echo(-1);
+            }
     break;
     case 'pen_rides' ://///////////////////////
         if(isset($_POST['action']) && $_POST['action']=='pen_rides'){
@@ -78,7 +91,16 @@ case 'get_details' :////////////////////////
                     }else{
                         echo(-1);
                         }
-
+    break;
+    case 'com_rides_adm' ://///////////////////////
+                    if(isset($_POST['action']) && $_POST['action']=='com_rides_adm'){
+                                               
+                         $data=$tbl_ride_obj->com_rides_adm();
+                         print_r(json_encode($data));
+                                                    
+                    }else{
+                       echo(-1);
+                     }
     break;
     case 'total_rides' ://///////////////////////
                       if(isset($_POST['action']) && $_POST['action']=='total_rides'){
@@ -190,7 +212,38 @@ case 'get_details' :////////////////////////
                             }else{
                                 echo -1;
                             }
-                        }   
+                        }
+                        
+    break;
+    case 'filter' ://///////////////////////
+                   if(isset($_POST['action']) && $_POST['action']=='filter'){
+                    if(isset($_POST['filterBy']) && isset($_POST['flag'])  ){
+
+                       
+                        $filterBy=$_POST['filterBy'];
+                        $status=$_POST['flag'];
+                     
+                       
+                        $obj=new Table_User();
+                        $flag=$tbl_ride_obj->filter($filterBy,$status);
+                        print_r(json_encode($flag));
+                    
+                    }else{
+                        echo(-1);
+                    }
+                    } 
+                    
+    break;
+    case 'get_details_adm' ://///////////////////////
+                   if(isset($_POST['action']) && $_POST['action']=='get_details_adm'){
+                                       
+                     $data=$tbl_ride_obj->get_details_adm();
+                     print_r(json_encode($data));
+                                    
+                   }else{
+                     echo(-1);
+                    }
+                 
 
 
 }//switch end

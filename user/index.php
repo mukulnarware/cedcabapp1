@@ -1,6 +1,6 @@
 <?php
 
-
+include '../layout/arrays.php';
 
 ?>
 <!DOCTYPE html>
@@ -22,11 +22,11 @@
   <div id='navbar'>
   <div id='u-sign'><span id='logo'>CedCab</span></div>
   <a class="navbar-brand" href="#">Contact Us</a>
-  <!-- <a class="navbar-brand" href="login.php">Login</a> -->
+  <a id='setting-tab' class="navbar-brand">Settings</a>
   <a class="navbar-brand" href="../index.php">Dashboard</a>
   <a class="navbar-brand" href="../logout.php">logout</a>
   <a class="navbar-brand" href="index.php">Home</a>
-  <span class='user-login-span'>  <h6 id='user-login-name'> </h6> </span>
+  <!-- <span class='user-login-span'>  <h6 id='user-login-name'> </h6> </span> -->
 </div>
 
   
@@ -72,11 +72,35 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
     
 
 </div>
+<div class="s-tab">
+    Sort by : <select name="sort" id="sort">
+        <option value="date">Date</option>
+        <option value="fare">Fare Amount</option>
+    </select>
+    <!-- //////////////////////////////////////////////////////// -->
+  Filter by : <select name="filter" id="filter">
+        <option value="week">Week</option>
+        <option value="cab">Cab</option>
+        <option value="month">Month</option>
+    </select>
+<!-- //1 filter by cab-->
+<select name="fltr_cab" id="filter-by-cab">
+        <?php
+        foreach($cabs as $cab)
+        echo "<option value='$cab'>$cab</option>";
+        ?>
+    </select>
+   
+
+
+
+
+</div>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ride Details</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Details</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modal-body">
@@ -84,7 +108,7 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
-          <!-- <button type="button" id='book-ride-btn' class="btn btn-primary" data-bs-dismiss="modal">Book Ride</button> -->
+          <!-- <button type="button" id='update-btn'styel='display: none;' class="btn btn-primary" data-bs-dismiss="modal">Update</button> -->
         </div>
       </div>
     </div>
@@ -102,10 +126,39 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
 
 
     <!-- </div> -->
-
-
-
     <script>
+    var flag;
+    $('#setting-tab').show();
+    
+    function setting(rideId,cxId){
+        //  alert('Are you sure want to see details of :'+rideId);
+        $.ajax({//ajax-1
+                        url:'../helper.php',
+                        type:'POST', 
+                        data:{   action:'viewDetails',
+                              rideId:rideId,
+                              cxId:cxId
+
+                              },
+                        success: function(res){
+                        
+                           
+              
+                            $('.modal-body').html(bodyData);
+                            $('#update-btn').modal('show');
+                            $('#exampleModal').modal('show');
+
+
+
+                        }//
+        });
+    }
+
+
+
+
+
+
         function viewDetails(rideId,cxId){
         //  alert('Are you sure want to see details of :'+rideId);
         $.ajax({//ajax-1
@@ -196,9 +249,9 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                                    
                                         var rideId=array[0];
                                         var cxId=array[9];
-                                    
+                                            flag=array[8];
                                 }
-                                str1 +="<td><button id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
+                                str1 +="<td><button class='red_btn' id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
                               $('#main_table').append(str1);
 
                             }
@@ -242,10 +295,12 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                                    
                                         var rideId=array[0];
                                         var cxId=array[9];
+                                        flag=array[8];
                                     
                                 }
-                                str1 +="<td><button id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></tr></tbody>";
+                                str1 +="<td><button class='red_btn' id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></tr></tbody>";
                               $('#main_table').append(str1);
+
 
                             }
                                                
@@ -289,9 +344,11 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                                    
                                         var rideId=array[0];
                                         var cxId=array[9];
+                                        flag=array[8];
+
                                     
                                 }
-                              str1 +="<td><button id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></tr></tbody>";
+                              str1 +="<td><button class='green_btn' id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></tr></tbody>";
                             $('#main_table').append(str1);
 
                           }
@@ -336,9 +393,10 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                                    
                                         var rideId=array[0];
                                         var cxId=array[9];
-                                    
+                                        flag=array[8];
+
                                 }
-                              str1 +="<td><button id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></tr></tbody>";
+                              str1 +="<td><button class='green_btn' id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></tr></tbody>";
                             $('#main_table').append(str1);
                         
 
@@ -355,7 +413,7 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
             $('#total-ride-btn').on('click',()=>{
 
                                                             
-                $.ajax({//ajax-3
+                $.ajax({//ajax-4
                     url:'../helper.php',
                     type:'POST', 
                     data:{   action:'total_rides'},
@@ -384,9 +442,9 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                                         var status=array[8];
                                 }
                                 if(status!='1'){
-                                    str1 +="<td><button id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></td></tr></tbody>";
+                                    str1 +="<td><button class='green_btn' id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></td></tr></tbody>";
                                 }else{
-                                str1 +="<td><button id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
+                                str1 +="<td><button class='red_btn' id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
                                 }
                             $('#main_table').append(str1);
                         
@@ -398,10 +456,130 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
                 });//ajax-4
 
             });
+// ///////////////filter table data///////////////////
+// filtring by cabs/date/week
+              $('#filter').on('change',()=>{
+                
+               if($('#filter').val()=='cab'){
+                   $('#filter-by-cab').show();
+
+               }else if($('#filter').val()=='month'){
+                $('#filter-by-cab').hide();
+                let filterBy= $('#filter').val();
+
+
+                $.ajax({
+                    url:'../helper.php',
+                    type:'POST',
+                    data:{
+                        action:'filter',
+                        'filterBy':filterBy,
+                        'flag':flag
+                    },
+                    success: function(data){
+                        $('#main_table').html('');
+                          
+                          res=JSON.parse(data);
+                       
+                          var str="<thead><tr>";
+                          for(let head in res[0]){
+                              str +="<th>"+head+"</th>";
+                          }
+                          str+="<th>Action</th></tr></thead>";
+
+                          $('#main_table').append(str);
+
+                          for(let tupple of res){
+                              var array=Object.values(tupple);
+                              var str1="<tbody><tr>";
+
+                              for(let x in array){
+                                    str1 +="<td>"+array[x]+"</td>";
+                                   
+                                        var rideId=array[0];
+                                        var cxId=array[9];
+                                        var status=array[8];
+                                }
+                                if(status!='1'){
+                                    str1 +="<td><button class='green_btn' id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></td></tr></tbody>";
+                                }else{
+                                str1 +="<td><button class='red_btn' id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
+                                }
+                            $('#main_table').append(str1);
+                        
+                        }
+
+
+                        
+                    }
+                });//ajax end
+                
+               }else{ 
+                $('#filter-by-cab').hide();
+                }
+              });
+
+              
 
 
 
-                }); //documenet.ready
+              $('#filter-by-cab').on('change',()=>{
+                
+                let filterBy= $('#filter-by-cab').val();
+
+
+                $.ajax({
+                    url:'../helper.php',
+                    type:'POST',
+                    data:{
+                        action:'filter',
+                        'filterBy':filterBy,
+                        'flag':flag
+                    },
+                    success: function(data){
+                        $('#main_table').html('');
+                          
+                          res=JSON.parse(data);
+                       
+                          var str="<thead><tr>";
+                          for(let head in res[0]){
+                              str +="<th>"+head+"</th>";
+                          }
+                          str+="<th>Action</th></tr></thead>";
+
+                          $('#main_table').append(str);
+
+                          for(let tupple of res){
+                              var array=Object.values(tupple);
+                              var str1="<tbody><tr>";
+
+                              for(let x in array){
+                                    str1 +="<td>"+array[x]+"</td>";
+                                   
+                                        var rideId=array[0];
+                                        var cxId=array[9];
+                                        var status=array[8];
+                                }
+                                if(status!='1'){
+                                    str1 +="<td><button class='green_btn' id='view-btn-"+rideId+"' onclick='viewDetails("+rideId+","+cxId+")'>View</button></td></tr></tbody>";
+                                }else{
+                                str1 +="<td><button class='red_btn' id='cancel-btn-"+rideId+"' onclick='cancelRide("+rideId+","+cxId+")'>Cancel</button></td></tr></tbody>";
+                                }
+                            $('#main_table').append(str1);
+                        
+                        }
+
+
+                        
+                    }
+                });//ajax end
+
+
+                
+               });
+              
+
+    }); //documenet.ready
     
     </script>
 </body>

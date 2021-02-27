@@ -32,20 +32,38 @@ margin: auto;
 width: 80%;
 }
 
-/* #navbar{
-    visibility: hidden;
-} */
+#setting-tab{
+    display: none;
+}
 
 #table tr,td{
     padding: 10px;
     border: solid green;
+    text-align: center;
 }#table tr td{
     padding: 10px;
     border: solid green;
 }
-#main_table button{
+table{
+    text-align: center;
+}
+/* #main_table button{
     background-color: rgb(248, 58, 58);
     color: floralwhite;
     padding: 4px 10px;
 
+} */
+.green_btn{
+    background-color:rgb(21, 139, 248);
+    color: floralwhite;
+    padding: 4px 10px;
+}
+.red_btn{
+    background-color:red;
+    color: floralwhite;
+    padding: 4px 10px;
+}
+
+#filter-by-cab{
+    display: none;
 }

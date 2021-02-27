@@ -80,6 +80,8 @@ class Table_User extends Dbcon{
            $_SESSION['user']['mobile']=$result['mobile'];
            $_SESSION['user']['is_admin']=$result['is_admin'];
           if($result['is_admin']==1){
+           $_SESSION['admin']['email']=$result['email_id'];
+
               return (-2);
           }else{
               return (true);
@@ -139,6 +141,44 @@ class Table_Ride extends Dbcon{
     public $status; // 1 for pending , 2 for complete & 0 for cancelled.It shows ride status
     public $customer_user_id;
  ///////////////////////////////////////////
+//  fuction for filter data
+ function filter($filterBy,$status){
+    session_start();
+   $data;
+        if(!isset($_SESSION['user'])){
+       
+            return(-1);
+        }else{
+        $userId=$_SESSION['user']['user_id'];
+
+        if($filterBy=='week'){
+
+        }else if($filterBy=='month'){
+          $sql=" select * from `tbl_ride` WHERE week(`ride_date`) = week(now()) and year(`ride_date`) = year(now()) and month(`ride_date`) = month(now()) and `customer_user_id`='$userId' and `status`=$status order by `ride_date`";
+        }else{
+        $sql="select * from `tbl_ride` where `status`='$status' AND `cabtype`='$filterBy' AND `customer_user_id`='$userId'";
+        }
+        
+        
+        
+        $res=$this->con->query($sql);
+          if($res->num_rows > 0) {   
+                $i = 0;
+              while ( $row=$res->fetch_assoc()) {
+                $this->data[$i] = $row;
+                ++$i;
+               }
+             return $this->data;
+            }else{
+            return 0;
+            }
+        
+    }
+
+ }
+
+    
+ ///////////////////////////////////////////
     // getting details of ride
     function viewDetails($rideId,$cxId){
         session_start();
@@ -170,7 +210,7 @@ class Table_Ride extends Dbcon{
                 return(-1);
             }else{
     
-                 // query for total pending rides
+                
              $sql="UPDATE `tbl_ride` SET `status`='0' WHERE `customer_user_id`='$cxId' AND `ride_id`='$rideId'";
              $res=$this->con->query($sql);
                    
@@ -183,7 +223,7 @@ class Table_Ride extends Dbcon{
     function pen_rides(){
     session_start();
     $tpen_ride;
-        if(!isset($_SESSION['user'])){
+        if(!isset($_SESSION['user']   )){
        
             return(-1);
         }else{
@@ -209,6 +249,36 @@ class Table_Ride extends Dbcon{
         }
 
     }
+// for admin
+    function pen_rides_adm(){
+        session_start();
+        $tpen_ride;
+            if(!isset($_SESSION['admin']   )){
+           
+                return(-1);
+            }else{
+    
+                 // query for total pending rides
+             $sql_pen_ride="SELECT *  FROM `tbl_ride` WHERE  `status`='1' ";
+             $res_tpr=$this->con->query($sql_pen_ride);
+    
+              if($res_tpr->num_rows > 0) {   
+               
+                $i = 0;
+                while ( $row=$res_tpr->fetch_assoc()) {
+                $this->tpen_ride[$i] = $row;
+                ++$i;
+                }
+                return $this->tpen_ride;
+            }else{
+                return 0;
+            }
+            // "tpr"=>$this->tpen_ride,
+    
+    
+            }
+    
+        }
   ///////////////////////////////////////////
     // getting cancelled rides details for tables
     function can_rides(){
@@ -273,7 +343,36 @@ class Table_Ride extends Dbcon{
             }
     
         }
-
+////////////
+        function com_rides_adm(){
+            session_start();
+            $tcom_ride;
+                if(!isset($_SESSION['admin'])){
+               
+                    return(-1);
+                }else{
+        
+                     // query for total pending rides
+                 $sql_com_ride="SELECT * FROM `tbl_ride` WHERE  `status`='2' ";
+            
+                 $res_tcomr=$this->con->query($sql_com_ride);
+                    if($res_tcomr->num_rows > 0) {   
+                   
+                    $i = 0;
+                    while ( $row=$res_tcomr->fetch_assoc()) {
+                    $this->tcom_ride[$i] = $row;
+                    ++$i;
+                    }
+                    return $this->tcom_ride;
+                }else{
+                    return 0;
+                }
+                // "tpr"=>$this->tcan_ride,
+        
+        
+                }
+        
+            }
          ///////////////////////////////////////////
     // getting completed rides details for tables
     function total_rides(){
@@ -308,13 +407,69 @@ class Table_Ride extends Dbcon{
 
 
     //////////get all the details
+    function get_details_adm(){
+        $response=[];
+        session_start();
+        if(!isset($_SESSION['admin'])){
+           
+            return(-1);
+        }else{
+        
+            // query for pending rides
+            $sql_pen_ride="SELECT count(`ride_id`) as `pending_ride` FROM `tbl_ride` where `status`='1' ";
+            $res_pr=$this->con->query($sql_pen_ride);
+            if($res_pr->num_rows > 0) {   
+                $res_pr=$res_pr->fetch_assoc();
+                // return $res_pr['pending_ride'];
+            }
+    
+    ///////////////////  sql for admin//////////////////////
+    // query for total spent
+    $sql_t_earned="SELECT sum(`total_fare`) as `t-earned` FROM `tbl_ride` WHERE `status`='2' ";
+    $res_te=$this->con->query($sql_t_earned);
+    if($res_te->num_rows > 0) {   
+        $res_te=$res_te->fetch_assoc();
+        // return $res_pr['pending_ride'];
+    }
+    /////////////////////
+    // query for totalblocked user
+    $sql_blocked="SELECT sum(`status`) as `blocked-user` FROM `tbl_user` WHERE `status`='0' ";
+    $res_b=$this->con->query($sql_blocked);
+    if($res_b->num_rows > 0) {   
+        $res_b=$res_b->fetch_assoc();
+        // return $res_pr['pending_ride'];
+    }
+    /////////////////////
+    // query for total rides
+    $sql_trides="SELECT count(`total_fare`) as `t-rides` FROM `tbl_ride` WHERE `status`='2' ";
+    $res_tr=$this->con->query($sql_trides);
+    if($res_tr->num_rows > 0) {   
+        $res_tr=$res_tr->fetch_assoc();
+        // return $res_pr['pending_ride'];
+    }
+    
+  
+    ////////////////////////////////////////////
+           
+            
+  
+    /////////////////////////////////////////////
+    return ($response=[ "pen_ride"=>$res_pr['pending_ride'],"total_rides"=> $res_tr['t-rides'], "total_earned" => $res_te['t-earned'],"blocked-user" => $res_b['blocked-user'] ]);
+    /////////
+        }
+    
+
+    } //end of func
+
+
 function get_details(){
     $response;
     session_start();
-    if(!isset($_SESSION['user'])){
+    if(!isset($_SESSION['user']) || !($_SESSION['admin'])  ){
        
         return(-1);
     }else{
+        
         // query for pending rides
         $sql_pen_ride="SELECT count(`ride_id`) as `pending_ride` FROM `tbl_ride` WHERE `customer_user_id`='".$_SESSION['user']['user_id']."' AND `status`='1' ";
         $res_pr=$this->con->query($sql_pen_ride);
@@ -331,7 +486,36 @@ function get_details(){
           // query for total rides
           $sql_tot_ride="SELECT count(`ride_id`) as `total_ride` FROM `tbl_ride` WHERE `customer_user_id`='".$_SESSION['user']['user_id']."'";
           $res_tr=$this->con->query($sql_tot_ride);
-         
+
+
+///////////////////  sql for admin//////////////////////
+// query for total spent
+$sql_t_earned="SELECT sum(`total_fare`) as `t-earned` FROM `tbl_ride` WHERE `status`='2' ";
+$res_te=$this->con->query($sql_t_earned);
+if($res_te->num_rows > 0) {   
+    $res_te=$res_te->fetch_assoc();
+    // return $res_pr['pending_ride'];
+}
+/////////////////////
+// query for totalblocked user
+$sql_blocked="SELECT sum(`status`) as `blocked_user` FROM `tbl_user` WHERE `status`='0' ";
+$res_b=$this->con->query($sql_t_earned);
+if($res_b->num_rows > 0) {   
+    $res_b=$res_b->fetch_assoc();
+    // return $res_pr['pending_ride'];
+}
+/////////////////////
+// query for total rides
+$sql_trides="SELECT count(`total_fare`) as `total_rides` FROM `tbl_ride` WHERE `status`='2' ";
+$res_trides=$this->con->query($sql_trides);
+if($res_trides->num_rows > 0) {   
+    $res_trides=$res_trides->fetch_assoc();
+    // return $res_pr['pending_ride'];
+}
+
+
+
+
 
 ////////////////////////////////////////////
         if($res_pr->num_rows > 0) {   

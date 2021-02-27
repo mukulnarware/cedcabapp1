@@ -6,6 +6,9 @@ if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==0)){
   echo "<h5 style='color: white; background:black;'>Welcome user : ".$_SESSION['user']['name']."</h5>";
   header('location:user/index.php');
  
+}else if((isset($_SESSION['user']) && $_SESSION['user']['is_admin']==1)){
+  echo "<h5 style='color: white; background:black;'>Welcome user : ".$_SESSION['user']['name']."</h5>";
+  header('location:admin/index.php');
 }
 ?>
 

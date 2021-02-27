@@ -140,7 +140,16 @@ align-items: center;
 }
 
 
+/* user /index.php --> css -->filter by and sort by */
+.s-tab{
+    width: 100%;
+    border: solid yellow;
+    background-color: lightslategray;
+    display: flex;
+    justify-content: center;
+    margin: auto;
 
+}
 
 
 
